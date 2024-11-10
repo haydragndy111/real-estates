@@ -3,10 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BaseController extends Controller
 {
-        /**
+
+    public $user;
+
+    public function __construct()
+    {
+        $this->user = Auth::guard('sanctum')->user();
+    }
+
+    /**
      * success response method.
      *
      * @return \Illuminate\Http\Response

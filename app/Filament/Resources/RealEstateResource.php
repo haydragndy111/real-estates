@@ -35,7 +35,9 @@ class RealEstateResource extends Resource
                 Select::make('district_id')
                     ->relationship('district', 'name')
                     ->required(),
-                TextInput::make('title')
+                TextInput::make('title_en')
+                    ->required(),
+                TextInput::make('title_ar')
                     ->required(),
                 RichEditor::make('description')
                     ->columnSpanFull()
@@ -75,7 +77,9 @@ class RealEstateResource extends Resource
             ->columns([
                 TextColumn::make('district.name')
                     ->badge(),
-                TextColumn::make('title')
+                TextColumn::make('title_en')
+                    ->badge(),
+                TextColumn::make('title_ar')
                     ->badge(),
                 TextColumn::make('status')
                     ->badge()

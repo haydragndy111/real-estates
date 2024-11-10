@@ -37,9 +37,9 @@ class ApiRealEstatesCollection extends ResourceCollection
             $location = $district->label.','.$district->city->label;
             return [
                 'id' => $item->id,
-                'title' => $item->title,
-                'price' => $item->aed_price,
+                'title' => $item->titleByUser,
                 'price_type' => $item->priceType,
+                'price' => $item->priceByUser,
                 'image' => $image,
                 'location' => $location,
                 'type' => $item->estateType,

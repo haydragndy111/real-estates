@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\CurrencyConstants;
 use App\Constants\RealEstateConstants;
 use App\Models\Scopes\ActiveEstateScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +16,8 @@ class RealEstate extends Model
 
     protected $fillable = [
         'district_id',
-        'title',
+        'title_en',
+        // 'title_ar',
         'description',
         'status',
         'aed_price',
@@ -36,16 +38,54 @@ class RealEstate extends Model
     protected $appends = [
         'estateType',
         'priceType',
+        'priceByUser',
+        'titleByUser',
     ];
 
     public function getEstateTypeAttribute()
     {
         return RealEstateConstants::getTypes()[$this->type];
     }
+    
+    public function getPriceByUserAttribute()
+    {
+        $user = Auth::guard('sanctum')->user();
+        if($user){
+            $currency = $user->profile->currency;
+            if($currency == CurrencyConstants::CURRENCY_AED){
+                return $this->aed_price;                
+            }elseif($currency == CurrencyConstants::CURRENCY_USD){
+                return $this->usd_price;
+            }
+        }
+
+        return $this->aed_price;
+    }
+    
+    public function getTitleByUserAttribute()
+    {
+        $user = Auth::guard('sanctum')->user();
+        if($user){
+            $locale = $user->profile->locale;
+            if($locale == 'en'){
+                return $this->title_en;                
+            }elseif($locale == 'ar'){
+                return $this->title_ar;
+            }
+        }
+
+        return $this->title_en;
+    }
 
     public function getPriceTypeAttribute()
     {
-        return 'aed';
+        $user = Auth::guard('sanctum')->user();
+        if($user){
+            $currency = $user->profile->currency;
+            return CurrencyConstants::getCurrenciesTypes()[$currency];
+        }
+
+        return CurrencyConstants::getCurrenciesTypes()[CurrencyConstants::CURRENCY_AED];
     }
 
     public function district()

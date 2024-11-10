@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('real_estates', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('district_id');
-            $table->string('title');
+            $table->string('title_en');
             $table->text('description');
             $table->tinyInteger('status');
             $table->decimal('aed_price');
