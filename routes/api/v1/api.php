@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\RealEstateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,3 +27,11 @@ Route::group([
     Route::get('', [RealEstateController::class, 'index']);
     Route::get('{estate}', [RealEstateController::class, 'show']);
 });
+
+Route::controller(AuthController::class)
+    ->prefix('auth')
+    ->group(function(){
+        Route::post('register', 'register');
+        Route::post('login', 'login');
+});
+

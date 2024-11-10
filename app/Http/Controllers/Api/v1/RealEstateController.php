@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api\v1;
 
+use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiRealEstatesCollection;
 use App\Http\Resources\ApiRealEstatesResource;
 use App\Models\RealEstate;
 use Illuminate\Http\Request;
 
-class RealEstateController extends Controller
+class RealEstateController extends BaseController
 {
     public function index()
     {
