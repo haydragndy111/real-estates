@@ -14,7 +14,10 @@ class ConfigController extends BaseController
     public function setConfig(Request $request)
     {
         $user = $this->user;
-        // dd($this->user->id);
+        $profile = $this->user->profile;
+        if($profile){
+            return $this->sendError('User Already Has Config');
+        }
 
         $validator = Validator::make($request->all(), [
             'locale' => [
