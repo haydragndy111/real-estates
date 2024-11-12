@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\ConfigController;
 use App\Http\Controllers\Api\v1\RealEstateController;
+use App\Http\Controllers\Api\v1\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,3 +44,12 @@ Route::controller(AuthController::class)
         Route::post('register', 'register');
         Route::post('login', 'login');
     });
+
+Route::group([
+    'prefix' => 'settings',
+    'middleware' => ['api'],
+], function () {
+    Route::get('faq', [SettingsController::class, 'getFaqData']);
+    Route::get('contact', [SettingsController::class, 'getContactData']);
+    Route::get('about', [SettingsController::class, 'getAboutData']);
+});
