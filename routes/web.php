@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\RealEstate;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/test', function () {
+    $city = RealEstate::where('id', 1)->first()->city;
+    dd($city);
     return view('welcome');
 });

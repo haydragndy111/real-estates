@@ -8,16 +8,17 @@ use App\Models\Scopes\ActiveEstateScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Database\Eloquent\Builder;
 
 class RealEstate extends Model
 {
     use HasFactory;
+    use \Znck\Eloquent\Traits\BelongsToThrough;
 
     protected $fillable = [
         'district_id',
         'title_en',
-        // 'title_ar',
+        'title_ar',
         'description',
         'status',
         'aed_price',
@@ -26,6 +27,7 @@ class RealEstate extends Model
         'size',
         'rooms',
         'handover',
+        'is_featured',
     ];
 
     protected static function booted()
@@ -46,14 +48,14 @@ class RealEstate extends Model
     {
         return RealEstateConstants::getTypes()[$this->type];
     }
-    
+
     public function getPriceByUserAttribute()
     {
         $user = Auth::guard('sanctum')->user();
         if($user){
             $currency = $user->profile->currency;
             if($currency == CurrencyConstants::CURRENCY_AED){
-                return $this->aed_price;                
+                return $this->aed_price;
             }elseif($currency == CurrencyConstants::CURRENCY_USD){
                 return $this->usd_price;
             }
@@ -61,14 +63,14 @@ class RealEstate extends Model
 
         return $this->aed_price;
     }
-    
+
     public function getTitleByUserAttribute()
     {
         $user = Auth::guard('sanctum')->user();
         if($user){
             $locale = $user->profile->locale;
             if($locale == 'en'){
-                return $this->title_en;                
+                return $this->title_en;
             }elseif($locale == 'ar'){
                 return $this->title_ar;
             }
@@ -88,6 +90,11 @@ class RealEstate extends Model
         return CurrencyConstants::getCurrenciesTypes()[CurrencyConstants::CURRENCY_AED];
     }
 
+    public function city(): \Znck\Eloquent\Relations\BelongsToThrough
+    {
+        return $this->belongsToThrough(City::class, [District::class]);
+    }
+
     public function district()
     {
         return $this->belongsTo(District::class);
@@ -98,4 +105,8 @@ class RealEstate extends Model
         return $this->hasMany(Image::class);
     }
 
+    public function scopeFeatured(Builder $query): void
+    {
+        $query->where('is_featured', 1);
+    }
 }

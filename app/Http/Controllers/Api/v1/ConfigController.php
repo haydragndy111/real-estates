@@ -15,6 +15,7 @@ class ConfigController extends BaseController
     {
         $user = $this->user;
         $profile = $this->user->profile;
+
         if($profile){
             return $this->sendError('User Already Has Config');
         }

@@ -29,14 +29,16 @@ class ApiRealEstatesCollection extends ResourceCollection
             'next_url' => $pagination['next_page_url'],
         ];
 
-        $priceType = 1;
-
         $estates = $this->collection->map(function($item){
-            $image = $item->images()->main()->first()->url;
+            $image = null;
+            if($item->images()->exists()){
+                $image = $item->images()->main()->first()->url;
+            }
             $district = $item->district;
             $location = $district->label.','.$district->city->label;
             return [
                 'id' => $item->id,
+                'district_id' => $item->district_id,
                 'title' => $item->titleByUser,
                 'price_type' => $item->priceType,
                 'price' => $item->priceByUser,

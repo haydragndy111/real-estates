@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\ConfigController;
+use App\Http\Controllers\Api\v1\DataController;
+use App\Http\Controllers\Api\v1\EstateUserController;
 use App\Http\Controllers\Api\v1\RealEstateController;
 use App\Http\Controllers\Api\v1\SettingsController;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,7 +27,12 @@ Route::group([
     'name' => 'real-estates.',
 ], function () {
     Route::get('', [RealEstateController::class, 'index']);
+    Route::get('featured', [RealEstateController::class, 'featuredEstates']);
     Route::get('{estate}', [RealEstateController::class, 'show']);
+    Route::post('/favourite/toggle/{estate}', [EstateUserController::class, 'toggleFavourite'])
+        ->middleware('auth:sanctum');
+    Route::get('/user/favourites', [EstateUserController::class, 'getFavouritesEstates'])
+        ->middleware('auth:sanctum');
 });
 
 Route::group([
@@ -52,4 +58,13 @@ Route::group([
     Route::get('faq', [SettingsController::class, 'getFaqData']);
     Route::get('contact', [SettingsController::class, 'getContactData']);
     Route::get('about', [SettingsController::class, 'getAboutData']);
+});
+
+Route::group([
+    'prefix' => 'data',
+    'name' => 'data.',
+    'middleware' => ['api'],
+], function () {
+    Route::get('cities', [DataController::class, 'getCities']);
+    Route::get('{city}/districts', [DataController::class, 'getDistricts']);
 });
